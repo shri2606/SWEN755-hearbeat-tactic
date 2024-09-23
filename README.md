@@ -1,4 +1,8 @@
 # Heartbeat Tactic Implementation
+## Team members:
+- Ayush Setpal (as8675)
+- Parva Shah (ps7384)
+- Shridhar Vilas Shinde (ss7536)
 
 ## Table of Contents
 - [Overview](#overview)
