@@ -1,13 +1,13 @@
 package Client;
 
+import Utils.HeartbeatConstants;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Random;
-import Utils.HeartbeatConstants;
 
 public class WearableHealthTracker {
 
-    public static void startClient() {
+    public static void connectClient() {
         try {
             // Connect to the monitoring server
             Socket socket = new Socket(HeartbeatConstants.SERVER_HOST, HeartbeatConstants.SERVER_PORT);
@@ -24,7 +24,7 @@ public class WearableHealthTracker {
                 }
 
                 // Send heartbeat
-                out.println("Heartbeat from wearable device");
+                System.out.println("Heartbeat from wearable device");
                 System.out.println("Wearable device: Heartbeat sent");
 
                 // Waiting for next heartbeat interval

@@ -1,16 +1,16 @@
-import Server.HeartbeatMonitor;
 import Client.WearableHealthTracker;
 import FaultHandler.FaultMonitor;
+import Server.HeartbeatMonitor;
 
 public class Main {
 
     public static void main(String[] args) {
         // Start the fault handler 
-        Thread faultHandlerThread = new Thread(() -> FaultMonitor.startFaultHandler());
-        faultHandlerThread.start();
+        Thread faultDetectionThread = new Thread(() -> FaultMonitor.startFaultHandler());
+        faultDetectionThread.start();
 
         // Start the server 
-        Thread serverThread = new Thread(() -> HeartbeatMonitor.startServer());
+        Thread serverThread = new Thread(() -> HeartbeatMonitor.initializeServer());
         serverThread.start();
 
         // Start the client 
@@ -20,7 +20,7 @@ public class Main {
             e.printStackTrace();
         }
 
-        Thread clientThread = new Thread(() -> WearableHealthTracker.startClient());
+        Thread clientThread = new Thread(() -> WearableHealthTracker.connectClient());
         clientThread.start();
     }
 }

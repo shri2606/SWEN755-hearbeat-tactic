@@ -1,37 +1,37 @@
 package Server;
 
-import java.io.PrintWriter;
-import java.net.Socket;
+import Utils.HeartbeatConstants;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.logging.Logger;
-import Utils.HeartbeatConstants;
 
 public class HeartbeatMonitor {
 
     private static final Logger logger = Logger.getLogger(HeartbeatMonitor.class.getName());
 
-    public static void startServer() {
-        try (ServerSocket serverSocket = new ServerSocket(HeartbeatConstants.SERVER_PORT)) {
+    public static void initializeServer() {
+        try (ServerSocket backendSocket = new ServerSocket(HeartbeatConstants.SERVER_PORT)) {
             System.out.println("Monitoring system waiting for connection on port " + HeartbeatConstants.SERVER_PORT);
 
             while (true) {
-                Socket clientSocket = serverSocket.accept(); // Accept connection from wearable
-                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                Socket userSocket = backendSocket.accept(); // Accept connection from wearable
+                BufferedReader br = new BufferedReader(new InputStreamReader(userSocket.getInputStream()));
 
-                long lastHeartbeatTime = System.currentTimeMillis();
+                long lastPulseTime = System.currentTimeMillis();
 
                 // Start monitoring the connected wearable device
                 while (true) {
-                    if (in.ready()) {
-                        String heartbeat = in.readLine();
+                    if (br.ready()) {
+                        String heartbeat = br.readLine();
                         System.out.println("Received: " + heartbeat);
-                        lastHeartbeatTime = System.currentTimeMillis(); // Reset the heartbeat time
+                        lastPulseTime = System.currentTimeMillis(); // Reset the heartbeat time
                     }
 
                     // Check if heartbeat timeout is exceeded
-                    if ((System.currentTimeMillis() - lastHeartbeatTime) > HeartbeatConstants.HEARTBEAT_TIMEOUT) {
+                    if ((System.currentTimeMillis() - lastPulseTime) > HeartbeatConstants.HEARTBEAT_TIMEOUT) {
                         logger.warning("No heartbeat received within " + HeartbeatConstants.HEARTBEAT_TIMEOUT + " ms. Device failure detected.");
                         notifyFaultHandler("Device failure detected"); // Notify fault handler
                         break; // Stop monitoring this device after failure
