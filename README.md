@@ -21,3 +21,7 @@ This project demonstrates the **Heartbeat Architectural Tactic** for fault detec
 - **Java 8** or later
   - Ensure that Java is installed and properly set up in your environment. You can verify installation by running `java -version` in your terminal/command prompt.
 
+## How To Run
+
+- compile: javac -d out -sourcepath src src/Main.java
+- run: java -cp out Main
