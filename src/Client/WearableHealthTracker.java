@@ -13,7 +13,6 @@ public class WearableHealthTracker {
             Socket socket = new Socket(HeartbeatConstants.BACKEND_HOST, HeartbeatConstants.BACKEND_PORT);
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
-            
             Random random = new Random();
 
             while (true) {
@@ -24,7 +23,7 @@ public class WearableHealthTracker {
                 }
 
                 // Send heartbeat
-                System.out.println("Heartbeat from wearable device");
+                out.println("Heartbeat from wearable device");
                 System.out.println("Wearable device: Heartbeat sent");
 
                 // Waiting for next heartbeat interval
@@ -33,6 +32,7 @@ public class WearableHealthTracker {
 
             // Closing the socket to simulate the device stopping
             socket.close();
+            System.out.println("Wearable device: Connection closed after failure.");
 
         } catch (Exception e) {
             e.printStackTrace();

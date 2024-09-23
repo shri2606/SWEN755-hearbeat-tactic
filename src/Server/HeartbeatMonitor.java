@@ -39,6 +39,8 @@ public class HeartbeatMonitor {
 
                     Thread.sleep(100); // Sleep for a short time before checking again
                 }
+                // Close the client socket after failure
+                userSocket.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
