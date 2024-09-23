@@ -13,8 +13,8 @@ public class HeartbeatMonitor {
     private static final Logger logger = Logger.getLogger(HeartbeatMonitor.class.getName());
 
     public static void initializeServer() {
-        try (ServerSocket backendSocket = new ServerSocket(HeartbeatConstants.SERVER_PORT)) {
-            System.out.println("Monitoring system waiting for connection on port " + HeartbeatConstants.SERVER_PORT);
+        try (ServerSocket backendSocket = new ServerSocket(HeartbeatConstants.BACKEND_PORT)) {
+            System.out.println("Monitoring system waiting for connection on port " + HeartbeatConstants.BACKEND_PORT);
 
             while (true) {
                 Socket userSocket = backendSocket.accept(); // Accept connection from wearable
@@ -31,8 +31,8 @@ public class HeartbeatMonitor {
                     }
 
                     // Check if heartbeat timeout is exceeded
-                    if ((System.currentTimeMillis() - lastPulseTime) > HeartbeatConstants.HEARTBEAT_TIMEOUT) {
-                        logger.warning("No heartbeat received within " + HeartbeatConstants.HEARTBEAT_TIMEOUT + " ms. Device failure detected.");
+                    if ((System.currentTimeMillis() - lastPulseTime) > HeartbeatConstants.PULSE_TIMEOUT) {
+                        logger.warning("No heartbeat received within " + HeartbeatConstants.PULSE_TIMEOUT + " ms. Device failure detected.");
                         notifyFaultHandler("Device failure detected"); // Notify fault handler
                         break; // Stop monitoring this device after failure
                     }
@@ -47,7 +47,7 @@ public class HeartbeatMonitor {
 
     // Notify the fault handler about the failure
     private static void notifyFaultHandler(String failureMessage) {
-        try (Socket socket = new Socket(HeartbeatConstants.FAULT_HANDLER_HOST, HeartbeatConstants.FAULT_HANDLER_PORT)) {
+        try (Socket socket = new Socket(HeartbeatConstants.ERROR_HANDLER_HOST, HeartbeatConstants.ERROR_HANDLER_PORT)) {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             out.println(failureMessage); // Send failure message to fault handler
         } catch (Exception e) {

@@ -11,8 +11,8 @@ import java.util.Scanner;
 public class FaultMonitor {
 
     public static void startFaultHandler() {
-        try (ServerSocket errorSocketHandler = new ServerSocket(HeartbeatConstants.FAULT_HANDLER_PORT)) {
-            System.out.println("Fault handler waiting for failure notifications on port " + HeartbeatConstants.FAULT_HANDLER_PORT);
+        try (ServerSocket errorSocketHandler = new ServerSocket(HeartbeatConstants.ERROR_HANDLER_PORT)) {
+            System.out.println("Fault handler waiting for failure notifications on port " + HeartbeatConstants.ERROR_HANDLER_PORT);
 
             while (true) {
                 Socket socket = errorSocketHandler.accept(); 
@@ -33,9 +33,9 @@ public class FaultMonitor {
 
     // Log the device failure to the log file
     private static void logFailure(String errorMessage) {
-        try (FileWriter fw = new FileWriter(HeartbeatConstants.LOG_FILE, true)) {  // true to append to file
+        try (FileWriter fw = new FileWriter(HeartbeatConstants.DEBUG_LOG, true)) {  // true to append to file
             fw.write(errorMessage + " at: " + new Date() + "\n");
-            System.out.println("Failure logged to: " + HeartbeatConstants.LOG_FILE);
+            System.out.println("Failure logged to: " + HeartbeatConstants.DEBUG_LOG);
         } catch (IOException e) {
             e.printStackTrace();
         }
