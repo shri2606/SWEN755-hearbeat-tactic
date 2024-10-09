@@ -25,7 +25,7 @@ public class BackupMonitor {
                 long lastPulseTime = checkpoint.getLastPulseTime();
                 int heartbeatSeq = checkpoint.getHeartbeatSequence();
 
-                System.out.println("Primary monitor failure detected. Backup monitor taking over...");
+                
                 System.out.println("Restored last pulse time: " + lastPulseTime);
                 System.out.println("Resuming heartbeat monitoring from sequence number: " + heartbeatSeq);
 
@@ -38,7 +38,7 @@ public class BackupMonitor {
 
                         // Increment and print the next sequence number
                         heartbeatSeq++;
-                        System.out.println("Checkpoint updated. Sequence number: " + heartbeatSeq);
+                        //System.out.println("Checkpoint updated. Sequence number: " + heartbeatSeq);
 
                         // Update the checkpoint
                         CheckpointManager.saveCheckpoint(heartbeatSeq, lastPulseTime);
