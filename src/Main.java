@@ -1,6 +1,7 @@
 import Client.WearableHealthTracker;
 import FaultHandler.FaultMonitor;
 import Server.HeartbeatMonitor;
+import Server.BackupMonitor;
 
 public class Main {
 
@@ -9,9 +10,13 @@ public class Main {
         Thread faultDetectionThread = new Thread(() -> FaultMonitor.startFaultHandler());
         faultDetectionThread.start();
 
-        // Start the server 
+        // Start the primary server 
         Thread serverThread = new Thread(() -> HeartbeatMonitor.initializeServer());
         serverThread.start();
+
+        // Start the backup monitor in standby mode
+        Thread backupThread = new Thread(() -> BackupMonitor.initializeBackupServer());
+        backupThread.start();
 
         // Start the client 
         try {

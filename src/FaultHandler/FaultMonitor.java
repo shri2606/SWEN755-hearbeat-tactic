@@ -10,6 +10,8 @@ import java.util.Scanner;
 
 public class FaultMonitor {
 
+    private static boolean failureDetected = false;  // To track if a failure has been detected
+
     public static void startFaultHandler() {
         try (ServerSocket errorSocketHandler = new ServerSocket(HeartbeatConstants.ERROR_HANDLER_PORT)) {
             System.out.println("Fault handler waiting for failure notifications on port " + HeartbeatConstants.ERROR_HANDLER_PORT);
@@ -22,6 +24,7 @@ public class FaultMonitor {
                 if (input.hasNextLine()) {
                     String errorMessage = input.nextLine();
                     logFailure(errorMessage); 
+                    failureDetected = true;  // Mark that a failure has occurred
                 }
 
                 socket.close();
@@ -39,5 +42,15 @@ public class FaultMonitor {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // Method for the backup monitor to check if a failure has occurred
+    public static boolean hasFailure() {
+        return failureDetected;
+    }
+
+    // Reset failure state after backup takes over
+    public static void resetFailure() {
+        failureDetected = false;
     }
 }
