@@ -7,7 +7,7 @@ public class Main {
 
     public static void main(String[] args) {
         // Start the fault handler 
-        Thread faultDetectionThread = new Thread(() -> FaultMonitor.startFaultHandler());
+        Thread faultDetectionThread = new Thread(() -> FaultMonitor.launchFaultHandler());
         faultDetectionThread.start();
 
         // Start the primary server 
@@ -15,7 +15,7 @@ public class Main {
         serverThread.start();
 
         // Start the backup monitor in standby mode
-        Thread backupThread = new Thread(() -> BackupMonitor.initializeBackupServer());
+        Thread backupThread = new Thread(() -> BackupMonitor.activateBackupServer());
         backupThread.start();
 
         // Start the client 
@@ -25,7 +25,7 @@ public class Main {
             e.printStackTrace();
         }
 
-        Thread clientThread = new Thread(() -> WearableHealthTracker.connectClient());
+        Thread clientThread = new Thread(() -> WearableHealthTracker.startClient());
         clientThread.start();
     }
 }

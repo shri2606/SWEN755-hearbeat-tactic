@@ -12,9 +12,9 @@ public class FaultMonitor {
 
     private static boolean failureDetected = false;  // To track if a failure has been detected
 
-    public static void startFaultHandler() {
-        try (ServerSocket errorSocketHandler = new ServerSocket(HeartbeatConstants.ERROR_HANDLER_PORT)) {
-            System.out.println("Fault handler waiting for failure notifications on port " + HeartbeatConstants.ERROR_HANDLER_PORT);
+    public static void launchFaultHandler() {
+        try (ServerSocket errorSocketHandler = new ServerSocket(HeartbeatConstants.ERROR_MANAGER_PORT)) {
+            System.out.println("Fault handler waiting for failure notifications on port " + HeartbeatConstants.ERROR_MANAGER_PORT);
 
             while (true) {
                 Socket socket = errorSocketHandler.accept(); 
@@ -22,8 +22,8 @@ public class FaultMonitor {
 
                 // Log the failure to the file
                 if (input.hasNextLine()) {
-                    String errorMessage = input.nextLine();
-                    logFailure(errorMessage); 
+                    String failureMessage = input.nextLine();
+                    recordFailure(failureMessage); 
                     failureDetected = true;  // Mark that a failure has occurred
                 }
 
@@ -35,17 +35,17 @@ public class FaultMonitor {
     }
 
     // Log the device failure to the log file
-    private static void logFailure(String errorMessage) {
-        try (FileWriter fw = new FileWriter(HeartbeatConstants.DEBUG_LOG, true)) {  // true to append to file
-            fw.write(errorMessage + " at: " + new Date() + "\n");
-            System.out.println("Failure logged to: " + HeartbeatConstants.DEBUG_LOG);
+    private static void recordFailure(String failureMessage) {
+        try (FileWriter fw = new FileWriter(HeartbeatConstants.TRACE_LOG, true)) {  // true to append to file
+            fw.write(failureMessage + " at: " + new Date() + "\n");
+            System.out.println("Failure logged to: " + HeartbeatConstants.TRACE_LOG);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     // Method for the backup monitor to check if a failure has occurred
-    public static boolean hasFailure() {
+    public static boolean containsFailure() {
         return failureDetected;
     }
 
