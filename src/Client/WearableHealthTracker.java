@@ -7,18 +7,18 @@ import java.util.Random;
 
 public class WearableHealthTracker {
 
-    public static void connectClient() {
+    public static void startClient() {
         try {
             // Connect to the monitoring server (Primary or Backup)
-            Socket socket = new Socket(HeartbeatConstants.BACKEND_HOST, HeartbeatConstants.BACKEND_PORT);
+            Socket socket = new Socket(HeartbeatConstants.SERVER_HOST, HeartbeatConstants.SERVER_PORT);
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
             Random random = new Random();
-            int heartbeatSequenceNumber = 1; // Start with heartbeat 1
+            int seqID = 1; // Start with heartbeat 1
 
             while (true) {
                 // Simulate random failure with a certain probability
-                if (random.nextDouble() < HeartbeatConstants.RISK_OF_FAILURE) {
+                if (random.nextDouble() < HeartbeatConstants.FAILURE_PROBABILTY) {
                     System.out.println("Wearable device: Simulating random failure...");
                     socket.close();  // Close connection to simulate failure
                     System.out.println("Wearable device: Connection closed after failure.");
@@ -28,21 +28,21 @@ public class WearableHealthTracker {
                     System.out.println("Wearable device: Attempting to reconnect...");
                     
                     // Reconnect to backup monitor (could be same or different port depending on setup)
-                    socket = new Socket(HeartbeatConstants.BACKEND_HOST, HeartbeatConstants.BACKUP_PORT); 
+                    socket = new Socket(HeartbeatConstants.SERVER_HOST, HeartbeatConstants.FALLBACK_PORT); 
                     out = new PrintWriter(socket.getOutputStream(), true);  // Re-establish output stream
                     System.out.println("Wearable device: Reconnected to backup monitor.");
                 }
 
                 // Send heartbeat with the current sequence number
-                long heartbeatTime = System.currentTimeMillis();
-                out.println("Heartbeat #" + heartbeatSequenceNumber + " sent at " + heartbeatTime);
-                System.out.println("Wearable device: Heartbeat #" + heartbeatSequenceNumber + " sent");
+                long pulseTime = System.currentTimeMillis();
+                out.println("Heartbeat #" + seqID + " sent at " + pulseTime);
+                System.out.println("Wearable device: Heartbeat #" + seqID + " sent");
 
                 // Increment sequence number
-                heartbeatSequenceNumber++;
+                seqID++;
 
                 // Waiting for next heartbeat interval
-                Thread.sleep(HeartbeatConstants.PULSE_INTERVAL);
+                Thread.sleep(HeartbeatConstants.HEARTBEAT_INTERVAL);
             }
 
         } catch (Exception e) {
